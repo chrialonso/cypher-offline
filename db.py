@@ -402,7 +402,8 @@ def get_category(user_id, encryption_key, conn):
     cursor.execute('select category, website from passwords where user_id = ?',  (user_id,))
     rows = cursor.fetchall()
     for category, website in rows:
-        categories.append((category, website))
+        decrypted_website = decrypt_password(website, encryption_key)
+        categories.append((category, decrypted_website))
     return categories
 
 def delete_login(user_id, password_id, conn):
