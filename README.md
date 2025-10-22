@@ -31,3 +31,9 @@
   <img src="https://github.com/user-attachments/assets/0f34d295-fcaa-47df-aaca-8483c7566f79" alt="Add New Login" width="311"/>
   <p><em>Add new credentials with custom fields</em></p>
 </div>
+
+## About This Project
+This project was built to learn and explore python, encryption, database security, and GUI development.
+
+## Disclaimer
+This is a learning project. While it implements real security practices, it has not undergone professional security auditing.
