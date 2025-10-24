@@ -10,6 +10,27 @@
 - **Category Organization** - Organize credentials by type
 - **Favorites Organization** - Organize credentials by favorites
 
+## Security Design
+
+- **Account Creation & Trust Based Access**  
+  On first launch, Cypher detects whether its directory has user data.  
+  If no user data exists, it displays a welcome page for creating the first account.  
+  Once that initial account is created, new accounts **cannot** be added from the login screen, they must be added manually by the original user.  
+  This prevents unauthorized users from creating accounts on someone else’s machine and accessing encrypted data.
+  The GUI does not expose a way to view or access other users’ credentials, maintaining separation between accounts.
+  
+- **Independent Instances**  
+  Cypher Offline is self-contained, meaning each Cypher folder maintains its own encrypted database and configuration files.  
+  This allows multiple independent installations on the same computer. For example, separate Cypher folders for different users without sharing data or credentials between them.
+  
+- **Master Password–Derived Key**  
+  Your master password is transformed into a cryptographic key using a key-derivation function (KDF) every time you log in. This derived key serves as the master key in the envelope encryption process described below.
+
+- **Envelope Encryption**  
+  Cypher uses two layers of encryption: your passwords are encrypted with a data key, 
+  and that data key is encrypted with a master key derived from your password. This design provides 
+  better key management and an additional layer of security.
+  
 ## Screenshots
 
 <div align="center">
