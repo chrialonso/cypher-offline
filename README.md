@@ -1,4 +1,14 @@
+## Download
 
+You can run Cypher Offline as a standalone application.  
+Download the Windows executable:
+
+- [Cypher Offline](https://github.com/chrialonso/cypher-offline/releases/download/v1.0/Cypher.exe) – Double-click to run.
+
+Download the '.exe' file.  
+Place Cypher.exe in your desired folder.  
+Double click to run.  
+Your data remains local and encrypted.
 ## Features
 
 - **Offline & Local** - Your passwords never leave your computer
