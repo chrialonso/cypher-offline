@@ -31,9 +31,11 @@ def decrypt_password(encrypted_blob, key):
     """
     Decrypt data encrypted by encrypt_password.
     """
+
     iv = encrypted_blob[:12]
     tag = encrypted_blob[12:28]
     ciphertext = encrypted_blob[28:]
+
     cipher = Cipher(algorithms.AES(key), modes.GCM(iv, tag))
     decryptor = cipher.decryptor()
     return(decryptor.update(ciphertext) + decryptor.finalize()).decode()

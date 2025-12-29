@@ -123,7 +123,7 @@ def init_database():
         create table if not exists passwords(
         id integer primary key autoincrement,
         user_id integer not null,
-        website text not null,
+        website blob not null,
         login_username text not null,
         encrypted_password blob not null,
         created_on timestamp default current_timestamp,
@@ -353,9 +353,10 @@ def store_password(user_id, website, login_username, plain_password, category, e
     website = normalize_website(website, top_level_domain)
     cursor = conn.cursor()
     encrypted_password = encrypt_password(plain_password, encryption_key)
+    encrypted_website = encrypt_password(website, encryption_key)
 
     try:
-        cursor.execute('insert into passwords (user_id, website, login_username, encrypted_password, category) values(?, ?, ?, ?, ?)', (user_id, website, login_username, encrypted_password, category))
+        cursor.execute('insert into passwords (user_id, website, login_username, encrypted_password, category) values(?, ?, ?, ?, ?)', (user_id, encrypted_website, login_username, encrypted_password, category))
     except sqlite3.Error as e:
         print(f"Error: {e}")
 
@@ -560,8 +561,20 @@ def get_login_info(username):
         result = cursor.fetchone()
 
     meta_conn.close()
+
+    max_attempts_str = get_config_value("max_attempts")
+    if max_attempts_str is None:
+        raise ValueError("max_attempts is not set in config")
+
+    lockout_time_str = get_config_value("lockout_time")
+    if lockout_time_str is None:
+        raise ValueError("lockout_time is not set in config")
+
+    max_attempts = int(max_attempts_str)
+    lockout_time = int(lockout_time_str)
+
     if result:
-        if result[0] >= int(get_config_value("max_attempts")) and (now - result[1]) < get_config_value("lockout_time"):
+        if result[0] >= max_attempts and (now - result[1]) < lockout_time:
             return False
     return True
 
