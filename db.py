@@ -380,13 +380,14 @@ def get_login_data(user_id, encryption_key, conn, category = None, favorite = No
     cursor.execute(query, params)
 
     rows = cursor.fetchall()
-    for website, login_username, encrypted_password, creation_date, password_id, category, is_favorite, modified in rows:
+    for encrypted_website, login_username, encrypted_password, creation_date, password_id, category, is_favorite, modified in rows:
         try:
             decrypted_password = decrypt_password(encrypted_password, encryption_key)
-            data.append((website, login_username, decrypted_password, creation_date, password_id, category, is_favorite, modified))
+            decrypted_website = decrypt_password(encrypted_website, encryption_key)
+            data.append((decrypted_website, login_username, decrypted_password, creation_date, password_id, category, is_favorite, modified))
         except Exception as e:
-            print(f'Error decrypting password for {website}: {e}')
-            data.append((website, login_username, 'Error: Cannot decrypt',creation_date, password_id, category, is_favorite, modified))
+            print(f'Error decrypting password for {encrypted_website}: {e}')
+            data.append((encrypted_website, login_username, 'Error: Cannot decrypt', creation_date, password_id, category, is_favorite, modified))
     return data
 
 def get_category(user_id, encryption_key, conn):
@@ -488,7 +489,7 @@ def change_master_password(user_id, old_password, new_password, vault):
     # commit the vault changes
     vault.commit()
 
-    # 7) Update metadata DB
+    # 7 Update metadata DB
     with sqlite3.connect(META_DB) as meta_conn:
         meta_c = meta_conn.cursor()
         meta_c.execute("""
